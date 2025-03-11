@@ -5,6 +5,7 @@ pipeline {
         GIT_REPO_URL = "https://github.com/minaniasse3/school"
         REGISTRY_CREDENTIALS = "docker-credentials"
         SONARQUBE_URL = "http://sonarqube:9000"
+        DB_PASSWORD = 'securepassword'  // Définir ici la variable DB_PASSWORD
     }
     stages {
         stage('Checkout') {
