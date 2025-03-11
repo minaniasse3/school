@@ -1,12 +1,13 @@
 pipeline {
     agent any
+
     environment {
         DOCKER_IMAGE = "yacineniasse/school-app:latest"
         GIT_REPO_URL = "https://github.com/minaniasse3/school"
         REGISTRY_CREDENTIALS = "docker-credentials"
         SONARQUBE_URL = "http://sonarqube:9000"
-        DB_PASSWORD = 'securepassword'  // Définir ici la variable DB_PASSWORD
     }
+
     stages {
         stage('Checkout') {
             steps {
@@ -14,6 +15,7 @@ pipeline {
                 git branch: 'main', url: "${GIT_REPO_URL}"
             }
         }
+
         stage('Build') {
             steps {
                 echo '⚙ Construction du projet avec Maven'
@@ -21,6 +23,7 @@ pipeline {
                 sh './mvnw clean install'
             }
         }
+
         stage('Unit Tests') {
             steps {
                 echo "🧪 Exécution des tests unitaires"
@@ -28,6 +31,7 @@ pipeline {
                 sh './mvnw test'
             }
         }
+
         stage('Quality Check with SonarQube') {
             steps {
                 echo "✅ Vérification de la qualité du code avec SonarQube"
@@ -37,6 +41,7 @@ pipeline {
                 }
             }
         }
+
         stage('Docker Login') {
             steps {
                 echo "🔐 Connexion au registre Docker"
@@ -47,6 +52,17 @@ pipeline {
                 }
             }
         }
+
+        stage('Docker Build & Push') {
+            steps {
+                echo "🐳 Construction et push de l'image Docker"
+                script {
+                    sh "docker build -t ${DOCKER_IMAGE} ."
+                    sh "docker push ${DOCKER_IMAGE}"
+                }
+            }
+        }
+
         stage('Deploy to Dev') {
             steps {
                 echo "🚀 Déploiement sur l'environnement Dev"
@@ -57,6 +73,7 @@ pipeline {
                 }
             }
         }
+
         stage('Deploy to Staging') {
             steps {
                 echo "🚀 Déploiement sur l'environnement Staging"
@@ -65,6 +82,7 @@ pipeline {
                 }
             }
         }
+
         stage('Deploy to Prod') {
             input {
                 message "Voulez-vous déployer en production?"
@@ -77,6 +95,7 @@ pipeline {
                 }
             }
         }
+
         stage('Monitor Metrics with Prometheus') {
             steps {
                 echo "📊 Configuration de la surveillance avec Prometheus"
@@ -85,6 +104,7 @@ pipeline {
                 }
             }
         }
+
         stage('Monitor Logs with ELK') {
             steps {
                 echo "📄 Configuration de la collecte de logs avec ELK"
@@ -94,6 +114,7 @@ pipeline {
             }
         }
     }
+
     post {
         always {
             echo "🧹 Nettoyage des ressources Docker et de l'espace de travail"
