@@ -16,6 +16,8 @@ services:
       timeout: 5s
       retries: 5
     restart: always
+    networks:
+      - app-network
 
   app:
     image: docker.io/yacineniasse/school-app:latest
@@ -29,7 +31,12 @@ services:
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
     restart: always
-    network_mode: bridge
+    networks:
+      - app-network
 
 volumes:
   mysql-data:
+
+networks:
+  app-network:
+    driver: bridge
