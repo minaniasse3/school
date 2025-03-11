@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier un Étudiant</title>
+    <style>
+        :root {
+            --primary: #3f51b5;
+            --primary-dark: #283593;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gray-light: #e9ecef;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .content {
+            flex: 1;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        form {
+            background-color: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.8rem;
+            margin: 0.5rem 0 1rem;
+            border: 1px solid var(--gray-light);
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 1rem;
+            font-weight: 500;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            color: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Gestion Scolaire</h1>
+    <p class="subtitle">Modifier un Étudiant</p>
+</header>
+
+<nav>
+    <div class="nav-container">
+        <a href="/etudiants">Étudiants</a>
+        <a href="/classes">Classes</a>
+        <a href="/professeurs">Professeurs</a>
+        <a href="/salles">Salles</a>
+        <a href="/emplois">Emplois du Temps</a>
+    </div>
+</nav>
+
+<div class="content">
+    <form th:action="@{/etudiants/save}" th:object="${etudiant}" method="post">
+        <input type="hidden" th:field="*{id}" />
+
+        <div>
+            <label for="nom">Nom :</label>
+            <input type="text" id="nom" th:field="*{nom}" required />
+        </div>
+
+        <div>
+            <label for="prenom">Prénom :</label>
+            <input type="text" id="prenom" th:field="*{prenom}" required />
+        </div>
+
+        <div>
+            <label for="email">Email :</label>
+            <input type="email" id="email" th:field="*{email}" required />
+        </div>
+
+        <div>
+            <label for="classe">Classe :</label>
+            <select id="classe" th:field="*{classe}" required>
+                <option value="" disabled selected>Sélectionnez une classe</option>
+                <option th:each="classe : ${classes}" th:value="${classe.id}" th:text="${classe.nom}"></option>
+            </select>
+        </div>
+
+        <button type="submit">Enregistrer</button>
+    </form>
+
+    <a href="/etudiants" class="back-link">Retour à la liste des étudiants</a>
+</div>
+
+<footer>
+    <p>&copy; 2025 - Application de Gestion Scolaire</p>
+</footer>
+</body>
+</html>

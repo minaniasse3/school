@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier un Emploi du Temps</title>
+    <style>
+        :root {
+            --primary: #3f51b5;
+            --primary-light: #5f72e6;
+            --primary-dark: #283593;
+            --secondary: #4CAF50;
+            --secondary-light: #66BB6A;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gray: #6c757d;
+            --gray-light: #e9ecef;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .subtitle {
+            margin-top: 0.5rem;
+            font-weight: 300;
+            opacity: 0.85;
+        }
+
+        nav {
+            background-color: var(--white);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--dark);
+            padding: 1rem 1.5rem;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+            background-color: var(--gray-light);
+        }
+
+        .content {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        form {
+            background-color: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            margin: 0.5rem 0 1rem;
+            border: 1px solid var(--gray-light);
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        footer {
+            background-color: var(--dark);
+            color: var(--white);
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 1rem;
+            font-weight: 500;
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: var(--primary-dark);
+        }
+
+        .alert {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Gestion Scolaire</h1>
+    <p class="subtitle">Modifier un Emploi du Temps</p>
+</header>
+
+<nav>
+    <div class="nav-container">
+        <a href="/emplois">Emplois du Temps</a>
+        <a href="/cours">Cours</a>
+        <a href="/professeurs">Professeurs</a>
+        <a href="/salles">Salles</a>
+        <a href="/classes">Classes</a>
+    </div>
+</nav>
+
+<div class="content">
+    <!-- Messages d'erreur ou de succès -->
+    <div th:if="${errorMessage}" class="alert alert-danger">
+        <p th:text="${errorMessage}"></p>
+    </div>
+    <div th:if="${successMessage}" class="alert alert-success">
+        <p th:text="${successMessage}"></p>
+    </div>
+
+    <form th:action="@{/emplois/save}" th:object="${emploiDuTemps}" method="post" onsubmit="return validateForm()">
+        <input type="hidden" th:field="*{id}" />
+
+        <div>
+            <label for="jour">Jour :</label>
+            <input type="text" id="jour" th:field="*{jour}" required aria-label="Jour de l'emploi du temps" />
+        </div>
+
+        <div>
+            <label for="heureDebut">Heure de début :</label>
+            <input type="time" id="heureDebut" th:field="*{heureDebut}" required aria-label="Heure de début" />
+        </div>
+
+        <div>
+            <label for="heureFin">Heure de fin :</label>
+            <input type="time" id="heureFin" th:field="*{heureFin}" required aria-label="Heure de fin" />
+        </div>
+
+        <div>
+            <label for="cours">Cours :</label>
+            <select id="cours" th:field="*{cours}" required aria-label="Sélectionner un cours">
+                <option value="" disabled selected>Sélectionnez un cours</option>
+                <option th:each="cours : ${cours}" th:value="${cours.id}" th:text="${cours.name}"></option>
+            </select>
+        </div>
+
+        <div>
+            <label for="professeur">Professeur :</label>
+            <select id="professeur" th:field="*{professeur}" required aria-label="Sélectionner un professeur">
+                <option value="" disabled selected>Sélectionnez un professeur</option>
+                <option th:each="professeur : ${professeurs}" th:value="${professeur.id}" th:text="${professeur.nom}"></option>
+            </select>
+        </div>
+
+        <div>
+            <label for="salle">Salle :</label>
+            <select id="salle" th:field="*{salle}" required aria-label="Sélectionner une salle">
+                <option value="" disabled selected>Sélectionnez une salle</option>
+                <option th:each="salle : ${salles}" th:value="${salle.id}" th:text="${salle.nom}"></option>
+            </select>
+        </div>
+
+        <button type="submit">Enregistrer</button>
+    </form>
+
+    <a href="/emplois" class="back-link">Retour à la liste des emplois du temps</a>
+</div>
+
+<footer>
+    <p>&copy; 2025 - Application de Gestion Scolaire</p>
+</footer>
+
+<script>
+    function validateForm() {
+        const jour = document.querySelector('#jour').value;
+        if (!jour) {
+            alert('Le jour est obligatoire.');
+            return false;
+        }
+        return true;
+    }
+</script>
+
+</body>
+</html>

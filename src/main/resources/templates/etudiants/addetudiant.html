@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion Scolaire - Ajouter un Étudiant</title>
+    <style>
+        :root {
+            --primary: #3f51b5;
+            --primary-light: #5f72e6;
+            --primary-dark: #283593;
+            --secondary: #4CAF50;
+            --secondary-light: #66BB6A;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gray: #6c757d;
+            --gray-light: #e9ecef;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .subtitle {
+            margin-top: 0.5rem;
+            font-weight: 300;
+            opacity: 0.85;
+        }
+
+        nav {
+            background-color: var(--white);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--dark);
+            padding: 1rem 1.5rem;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+            background-color: var(--gray-light);
+        }
+
+        .content {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--gray-light);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .error-message {
+            color: red;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        footer {
+            background-color: var(--dark);
+            color: var(--white);
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Gestion Scolaire</h1>
+    <p class="subtitle">Ajouter un Étudiant</p>
+</header>
+
+<nav>
+    <div class="nav-container">
+        <a href="/etudiants">Étudiants</a>
+        <a href="/classes">Classes</a>
+        <a href="/professeurs">Professeurs</a>
+        <a href="/salles">Salles</a>
+        <a href="/emplois">Emplois du Temps</a>
+    </div>
+</nav>
+
+<div class="content">
+    <div th:if="${errorMessage}" class="error-message">
+        <p th:text="${errorMessage}"></p>
+    </div>
+    <form th:action="@{/etudiants/save}" method="post">
+        <div class="form-group">
+            <label for="nom">Nom</label>
+            <input type="text" id="nom" name="nom" th:value="${etudiant.nom}" required />
+        </div>
+        <div class="form-group">
+            <label for="prenom">Prénom</label>
+            <input type="text" id="prenom" name="prenom" th:value="${etudiant.prenom}" required />
+        </div>
+        <div class="form-group">
+            <label for="datenaiss">Date de Naissance</label>
+            <input type="date" id="datenaiss" name="datenaiss" th:value="${etudiant.datenaiss}" required />
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" th:value="${etudiant.email}" required />
+        </div>
+        <div class="form-group">
+            <label for="classe">Classe</label>
+            <select id="classe" name="classe.id" required>
+                <option value="" disabled selected>Choisir une classe</option>
+                <option th:each="classe : ${classes}" th:value="${classe.id}" th:text="${classe.nom}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <button type="submit">Enregistrer</button>
+        </div>
+    </form>
+</div>
+
+<footer>
+    <p>&copy; 2025 - Application de Gestion Scolaire</p>
+</footer>
+
+</body>
+</html>

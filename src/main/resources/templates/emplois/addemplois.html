@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter un Emploi du Temps</title>
+    <style>
+        :root {
+            --primary: #3f51b5;
+            --primary-light: #5f72e6;
+            --primary-dark: #283593;
+            --secondary: #4CAF50;
+            --secondary-light: #66BB6A;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gray: #6c757d;
+            --gray-light: #e9ecef;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .subtitle {
+            margin-top: 0.5rem;
+            font-weight: 300;
+            opacity: 0.85;
+        }
+
+        nav {
+            background-color: var(--white);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--dark);
+            padding: 1rem 1.5rem;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+            background-color: var(--gray-light);
+        }
+
+        .content {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1rem;
+            border: 1px solid var(--gray-light);
+            border-radius: 4px;
+            background-color: var(--white);
+        }
+
+        button {
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        footer {
+            background-color: var(--dark);
+            color: var(--white);
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Gestion Scolaire</h1>
+    <p class="subtitle">Ajouter un Emploi du Temps</p>
+</header>
+
+<nav>
+    <div class="nav-container">
+        <a href="/cours">Cours</a>
+        <a href="/classes">Classes</a>
+        <a href="/professeurs">Professeurs</a>
+        <a href="/salles">Salles</a>
+        <a href="/emplois">Emplois du Temps</a>
+    </div>
+</nav>
+
+<div class="content">
+    <form th:action="@{/emplois/save}" method="post">
+        <div class="form-group">
+            <label for="jour">Jour</label>
+            <select id="jour" name="jour">
+                <option value="Lundi">Lundi</option>
+                <option value="Mardi">Mardi</option>
+                <option value="Mercredi">Mercredi</option>
+                <option value="Jeudi">Jeudi</option>
+                <option value="Vendredi">Vendredi</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="heureDebut">Heure de début</label>
+            <input type="time" id="heureDebut" name="heureDebut" required />
+        </div>
+
+        <div class="form-group">
+            <label for="heureFin">Heure de fin</label>
+            <input type="time" id="heureFin" name="heureFin" required />
+        </div>
+
+        <div class="form-group">
+            <label for="cours">Cours</label>
+            <select id="cours" name="cours.id">
+                <option th:each="cours : ${cours}" th:value="${cours.id}" th:text="${cours.name}"></option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="professeur">Professeur</label>
+            <select id="professeur" name="professeur.id">
+                <option th:each="professeur : ${professeurs}" th:value="${professeur.id}" th:text="${professeur.nom + ' ' + professeur.prenom}"></option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="salle">Salle</label>
+            <select id="salle" name="salle.id">
+                <option th:each="salle : ${salles}" th:value="${salle.id}" th:text="${salle.nom}"></option>
+            </select>
+        </div>
+
+        <button type="submit">Ajouter</button>
+    </form>
+</div>
+
+<footer>
+    <p>&copy; 2025 - Application de Gestion Scolaire</p>
+</footer>
+
+</body>
+</html>

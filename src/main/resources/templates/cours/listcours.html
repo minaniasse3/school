@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion Scolaire - Liste des Cours</title>
+    <style>
+        :root {
+            --primary: #3f51b5;
+            --primary-light: #5f72e6;
+            --primary-dark: #283593;
+            --secondary: #4CAF50;
+            --secondary-light: #66BB6A;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gray: #6c757d;
+            --gray-light: #e9ecef;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .subtitle {
+            margin-top: 0.5rem;
+            font-weight: 300;
+            opacity: 0.85;
+        }
+
+        nav {
+            background-color: var(--white);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--dark);
+            padding: 1rem 1.5rem;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+            background-color: var(--gray-light);
+        }
+
+        .content {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .success-message, .error-message {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .success-message {
+            color: green;
+        }
+
+        .error-message {
+            color: red;
+        }
+
+        table {
+            width: 100%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid var(--gray-light);
+            padding: 8px 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: var(--primary-light);
+            color: var(--white);
+        }
+
+        td {
+            background-color: var(--white);
+        }
+
+        .actions a {
+            margin: 0 5px;
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .actions a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background-color: var(--dark);
+            color: var(--white);
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Gestion Scolaire</h1>
+    <p class="subtitle">Liste des Cours</p>
+</header>
+
+<nav>
+    <div class="nav-container">
+        <a href="/cours">Cours</a>
+        <a href="/classes">Classes</a>
+        <a href="/professeurs">Professeurs</a>
+        <a href="/salles">Salles</a>
+        <a href="/emplois">Emplois du Temps</a>
+    </div>
+</nav>
+
+<div class="content">
+    <div th:if="${successMessage}" class="success-message">
+        <p th:text="${successMessage}"></p>
+    </div>
+    <div th:if="${errorMessage}" class="error-message">
+        <p th:text="${errorMessage}"></p>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <!-- Supprimer la ligne ID -->
+            <th>Nom</th>
+            <th>Description</th>
+            <th>Salle</th>
+            <th>Professeur</th>
+            <th>Classe</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="cours : ${cours}">
+            <!-- Supprimer la cellule ID -->
+            <td th:text="${cours.name}"></td>
+            <td th:text="${cours.description}"></td>
+            <td th:text="${cours.salle?.nom}"></td>
+            <td th:text="${cours.professeur?.nom} + ' ' + ${cours.professeur?.prenom}"></td>
+            <td th:text="${cours.classe?.nom}"></td>
+            <td class="actions">
+                <!-- L'ID est toujours utilisé dans les liens -->
+                <a th:href="@{/cours/{id}/edit(id=${cours.id})}">Modifier</a> |
+                <a th:href="@{/cours/{id}/delete(id=${cours.id})}" onclick="return confirm('Voulez-vous vraiment supprimer ce cours ?');">Supprimer</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+
+    <h2><a href="/cours/add">Ajouter un Cours</a></h2>
+</div>
+
+<footer>
+    <p>&copy; 2025 - Application de Gestion Scolaire</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion Scolaire - Accueil</title>
+    <style>
+        :root {
+            --primary: #3f51b5;
+            --primary-light: #5f72e6;
+            --primary-dark: #283593;
+            --secondary: #4CAF50;
+            --secondary-light: #66BB6A;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gray: #6c757d;
+            --gray-light: #e9ecef;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .subtitle {
+            margin-top: 0.5rem;
+            font-weight: 300;
+            opacity: 0.85;
+        }
+
+        nav {
+            background-color: var(--white);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--dark);
+            padding: 1rem 1.5rem;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+            background-color: var(--gray-light);
+        }
+
+        .content {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .welcome-message {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding: 1rem;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .welcome-message p {
+            font-size: 1.2rem;
+            color: var(--gray);
+        }
+
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .card {
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            flex: 1;
+            min-width: 250px;
+            max-width: 300px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            background-color: var(--primary-light);
+            color: var(--white);
+            padding: 1.2rem;
+            text-align: center;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            flex: 1;
+        }
+
+        .card p {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--secondary-light);
+        }
+
+        footer {
+            background-color: var(--dark);
+            color: var(--white);
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            nav a {
+                padding: 0.8rem;
+            }
+
+            .cards-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .card {
+                width: 100%;
+                max-width: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Gestion Scolaire</h1>
+    <p class="subtitle">Une solution complète pour gérer votre établissement</p>
+</header>
+
+<nav>
+    <div class="nav-container">
+        <a href="/cours">Cours</a>
+        <a href="/classes">Classes</a>
+        <a href="/professeurs">Professeurs</a>
+        <a href="/salles">Salles</a>
+        <a href="/emplois">Emplois du Temps</a>
+    </div>
+</nav>
+
+<div class="content">
+    <div class="welcome-message">
+        <h2>Bienvenue dans votre espace de gestion</h2>
+        <p>Accédez rapidement à tous vos outils de gestion scolaire</p>
+    </div>
+
+    <div class="cards-container">
+        <div class="card">
+            <div class="card-header">
+                <h3>Gestion des Cours</h3>
+            </div>
+            <div class="card-body">
+                <div class="card-icon">📚</div>
+                <p>Consultez, ajoutez, modifiez ou supprimez des cours. Organisez votre catalogue pédagogique.</p>
+                <a href="/cours" class="btn">Accéder</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Gestion des Classes</h3>
+            </div>
+            <div class="card-body">
+                <div class="card-icon">👥</div>
+                <p>Gérez les informations de chaque classe, les effectifs et suivez la progression des étudiants.</p>
+                <a href="/classes" class="btn">Accéder</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Gestion des Professeurs</h3>
+            </div>
+            <div class="card-body">
+                <div class="card-icon">👨‍🏫</div>
+                <p>Ajoutez et gérez les informations des professeurs, leurs spécialités et disponibilités.</p>
+                <a href="/professeurs" class="btn">Accéder</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Gestion des Salles</h3>
+            </div>
+            <div class="card-body">
+                <div class="card-icon">🏫</div>
+                <p>Optimisez l'utilisation de vos salles et gérez les équipements disponibles.</p>
+                <a href="/salles" class="btn">Accéder</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 - Application de Gestion Scolaire</p>
+</footer>
+</body>
+</html>
