@@ -5,7 +5,7 @@ pipeline {
         DOCKER_REGISTRY = "docker.io"
         DOCKER_IMAGE_NAME = "school-app"
         DOCKER_IMAGE = "${DOCKER_REGISTRY}/yacineniasse/${DOCKER_IMAGE_NAME}:latest"
-        GIT_REPO_URL = "https://github.com/minaniasse03/School.git"
+        GIT_REPO_URL = "https://github.com/minaniasse03/School"
         REGISTRY_CREDENTIALS = "docker-credentials"
         SONARQUBE = "sonarqube-server"
     }
