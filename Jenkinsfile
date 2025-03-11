@@ -1,7 +1,6 @@
 pipeline {
     agent any
     environment {
-        // Mettre à jour avec la référence exacte à votre image
         DOCKER_IMAGE = "yacineniasse/school-app:latest"
         GIT_REPO_URL = "https://github.com/minaniasse3/school"
         REGISTRY_CREDENTIALS = "docker-credentials"
@@ -16,7 +15,7 @@ pipeline {
         }
         stage('Build') {
             steps {
-                echo '⚙️ Construction du projet avec Maven'
+                echo '⚙ Construction du projet avec Maven'
                 sh 'chmod +x ./mvnw'
                 sh './mvnw clean install'
             }
@@ -52,13 +51,7 @@ pipeline {
                 echo "🚀 Déploiement sur l'environnement Dev"
                 script {
                     sh "docker pull ${DOCKER_IMAGE}"
-                    
-                    // Si vous avez un docker-compose.yml
                     sh "docker-compose up -d"
-                    
-                    // Ou si vous préférez lancer le conteneur directement
-                    // sh "docker run -d -p 8080:8080 --name school-app ${DOCKER_IMAGE}"
-                    
                     sh "docker ps | grep school-app || echo '❌ Erreur : L'application ne tourne pas'"
                 }
             }
@@ -107,7 +100,7 @@ pipeline {
                 try {
                     sh 'docker system prune -f'
                 } catch (Exception e) {
-                    echo "⚠️ Docker non disponible pour le nettoyage: ${e.message}"
+                    echo "⚠ Docker non disponible pour le nettoyage: ${e.message}"
                 }
                 cleanWs()
             }
