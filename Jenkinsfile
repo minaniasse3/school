@@ -1,15 +1,12 @@
 pipeline {
     agent any
-
     environment {
-        DOCKER_REGISTRY = "docker.io"
-        DOCKER_IMAGE_NAME = "school-app"
-        DOCKER_IMAGE = "${DOCKER_REGISTRY}/yacineniasse/${DOCKER_IMAGE_NAME}:latest"
+        // Mettre à jour avec la référence exacte à votre image
+        DOCKER_IMAGE = "yacineniasse/school-app:latest"
         GIT_REPO_URL = "https://github.com/minaniasse3/school"
         REGISTRY_CREDENTIALS = "docker-credentials"
-        SONARQUBE = "sonarqube-server"
+        SONARQUBE_URL = "http://sonarqube:9000"
     }
-
     stages {
         stage('Checkout') {
             steps {
@@ -17,30 +14,29 @@ pipeline {
                 git branch: 'main', url: "${GIT_REPO_URL}"
             }
         }
-
         stage('Build') {
             steps {
-                echo "⚙️ Construction du projet avec Maven"
+                echo '⚙️ Construction du projet avec Maven'
+                sh 'chmod +x ./mvnw'
                 sh './mvnw clean install'
             }
         }
-
         stage('Unit Tests') {
             steps {
                 echo "🧪 Exécution des tests unitaires"
+                sh 'chmod +x ./mvnw'
                 sh './mvnw test'
             }
         }
-
         stage('Quality Check with SonarQube') {
             steps {
                 echo "✅ Vérification de la qualité du code avec SonarQube"
                 script {
-                    sh "mvn sonar:sonar -Dsonar.host.url=${SONARQUBE}"
+                    sh 'chmod +x ./mvnw'
+                    sh "./mvnw sonar:sonar -Dsonar.host.url=${SONARQUBE_URL}"
                 }
             }
         }
-
         stage('Docker Login') {
             steps {
                 echo "🔐 Connexion au registre Docker"
@@ -51,18 +47,22 @@ pipeline {
                 }
             }
         }
-
         stage('Deploy to Dev') {
             steps {
                 echo "🚀 Déploiement sur l'environnement Dev"
                 script {
                     sh "docker pull ${DOCKER_IMAGE}"
+                    
+                    // Si vous avez un docker-compose.yml
                     sh "docker-compose up -d"
+                    
+                    // Ou si vous préférez lancer le conteneur directement
+                    // sh "docker run -d -p 8080:8080 --name school-app ${DOCKER_IMAGE}"
+                    
                     sh "docker ps | grep school-app || echo '❌ Erreur : L'application ne tourne pas'"
                 }
             }
         }
-
         stage('Deploy to Staging') {
             steps {
                 echo "🚀 Déploiement sur l'environnement Staging"
@@ -71,8 +71,11 @@ pipeline {
                 }
             }
         }
-
         stage('Deploy to Prod') {
+            input {
+                message "Voulez-vous déployer en production?"
+                ok "Oui, déployer"
+            }
             steps {
                 echo "🚀 Déploiement sur l'environnement de Production"
                 script {
@@ -80,31 +83,40 @@ pipeline {
                 }
             }
         }
-
         stage('Monitor Metrics with Prometheus') {
             steps {
-                echo "📊 Déploiement de Prometheus pour la surveillance"
+                echo "📊 Configuration de la surveillance avec Prometheus"
                 script {
                     sh 'kubectl apply -f kubernetes/prometheus-deployment.yaml'
                 }
             }
         }
-
         stage('Monitor Logs with ELK') {
             steps {
-                echo "📄 Déploiement de l'ELK Stack pour les logs"
+                echo "📄 Configuration de la collecte de logs avec ELK"
                 script {
                     sh 'kubectl apply -f kubernetes/elk-deployment.yaml'
                 }
             }
         }
     }
-
     post {
         always {
             echo "🧹 Nettoyage des ressources Docker et de l'espace de travail"
-            sh 'docker system prune -f'
-            cleanWs()
+            script {
+                try {
+                    sh 'docker system prune -f'
+                } catch (Exception e) {
+                    echo "⚠️ Docker non disponible pour le nettoyage: ${e.message}"
+                }
+                cleanWs()
+            }
+        }
+        success {
+            echo "✅ Pipeline exécuté avec succès"
+        }
+        failure {
+            echo "❌ Échec du pipeline"
         }
     }
 }
