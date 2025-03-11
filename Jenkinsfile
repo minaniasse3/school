@@ -9,6 +9,7 @@ pipeline {
     }
 
     stages {
+        // Étape 1 : Récupération du code source
         stage('Checkout') {
             steps {
                 echo "🔄 Récupération du code source depuis ${GIT_REPO_URL}"
@@ -16,6 +17,7 @@ pipeline {
             }
         }
 
+        // Étape 2 : Construction du projet avec Maven
         stage('Build') {
             steps {
                 echo '⚙ Construction du projet avec Maven'
@@ -24,6 +26,7 @@ pipeline {
             }
         }
 
+        // Étape 3 : Exécution des tests unitaires
         stage('Unit Tests') {
             steps {
                 echo "🧪 Exécution des tests unitaires"
@@ -32,6 +35,7 @@ pipeline {
             }
         }
 
+        // Étape 4 : Vérification de la qualité du code avec SonarQube
         stage('Quality Check with SonarQube') {
             steps {
                 echo "✅ Vérification de la qualité du code avec SonarQube"
@@ -42,6 +46,7 @@ pipeline {
             }
         }
 
+        // Étape 5 : Connexion au registre Docker
         stage('Docker Login') {
             steps {
                 echo "🔐 Connexion au registre Docker"
@@ -53,6 +58,7 @@ pipeline {
             }
         }
 
+        // Étape 6 : Construction et push de l'image Docker
         stage('Docker Build & Push') {
             steps {
                 echo "🐳 Construction et push de l'image Docker"
@@ -63,6 +69,7 @@ pipeline {
             }
         }
 
+        // Étape 7 : Déploiement sur l'environnement Dev
         stage('Deploy to Dev') {
             steps {
                 echo "🚀 Déploiement sur l'environnement Dev"
@@ -74,6 +81,7 @@ pipeline {
             }
         }
 
+        // Étape 8 : Déploiement sur l'environnement Staging
         stage('Deploy to Staging') {
             steps {
                 echo "🚀 Déploiement sur l'environnement Staging"
@@ -83,6 +91,7 @@ pipeline {
             }
         }
 
+        // Étape 9 : Déploiement sur l'environnement de Production (avec confirmation manuelle)
         stage('Deploy to Prod') {
             input {
                 message "Voulez-vous déployer en production?"
@@ -96,6 +105,7 @@ pipeline {
             }
         }
 
+        // Étape 10 : Surveillance des métriques avec Prometheus
         stage('Monitor Metrics with Prometheus') {
             steps {
                 echo "📊 Configuration de la surveillance avec Prometheus"
@@ -105,6 +115,7 @@ pipeline {
             }
         }
 
+        // Étape 11 : Collecte de logs avec ELK
         stage('Monitor Logs with ELK') {
             steps {
                 echo "📄 Configuration de la collecte de logs avec ELK"
@@ -115,6 +126,7 @@ pipeline {
         }
     }
 
+    // Actions post-build
     post {
         always {
             echo "🧹 Nettoyage des ressources Docker et de l'espace de travail"
